@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Insertdata extends StatefulWidget {
   const Insertdata({super.key});
@@ -11,6 +14,17 @@ TextEditingController stdName = TextEditingController();
 TextEditingController stdAge = TextEditingController();
 TextEditingController stdClass = TextEditingController();
 TextEditingController stdSection = TextEditingController();
+
+Future<void> insertData() async {
+  String url = "http://localhost:82/Php%20Api/insertStd.php";
+  var response = await http.post(Uri.parse(url), body: {
+    "name": stdName.text,
+    "age": stdAge.text,
+    "class": stdClass.text,
+    "section": stdSection.text,
+  });
+  jsonDecode(response.body);
+}
 
 class _InsertdataState extends State<Insertdata> {
   @override
@@ -33,10 +47,9 @@ class _InsertdataState extends State<Insertdata> {
             height: 15,
           ),
           Container(
+            // color: Colors.red,
             padding: EdgeInsets.all(15),
-            // height: 20,
-            // color: Colors.amber.shade200,
-            width: double.infinity,
+            // width: double.infinity,
             child: TextFormField(
               controller: stdName,
               decoration: InputDecoration(
@@ -53,9 +66,9 @@ class _InsertdataState extends State<Insertdata> {
             padding: EdgeInsets.all(15),
             // height: 20,
             // color: Colors.amber.shade200,
-            width: double.infinity,
+            // width: double.infinity,
             child: TextFormField(
-               controller: stdAge,
+              controller: stdAge,
               decoration: InputDecoration(
                   label: Text('Enter Student Age'),
                   border: OutlineInputBorder(
@@ -68,11 +81,8 @@ class _InsertdataState extends State<Insertdata> {
           ),
           Container(
             padding: EdgeInsets.all(15),
-            // height: 20,
-            // color: Colors.amber.shade200,
-            width: double.infinity,
             child: TextFormField(
-               controller: stdClass,
+              controller: stdClass,
               decoration: InputDecoration(
                   label: Text('Enter Student Class'),
                   border: OutlineInputBorder(
@@ -87,9 +97,9 @@ class _InsertdataState extends State<Insertdata> {
             padding: EdgeInsets.all(15),
             // height: 20,
             // color: Colors.amber.shade200,
-            width: double.infinity,
+            // width: double.infinity,
             child: TextFormField(
-               controller: stdSection,
+              controller: stdSection,
               decoration: InputDecoration(
                   label: Text('Enter Student Section'),
                   border: OutlineInputBorder(
@@ -98,10 +108,32 @@ class _InsertdataState extends State<Insertdata> {
             ),
           ),
           Container(
-              padding: EdgeInsets.all(15),
-              height: 60,
-              width: double.infinity,
-              child: ElevatedButton(onPressed: () {}, child: Text('Submit')))
+            padding: EdgeInsets.all(15),
+            height: 60,
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                insertData();
+                stdName.clear();
+                stdAge.clear();
+                stdClass.clear();
+                stdSection.clear();
+              },
+              child: Text('Submit'),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 40,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/viewstudent');
+              },
+              child: Text('View Students'),
+            ),
+          )
         ],
       ),
     );
