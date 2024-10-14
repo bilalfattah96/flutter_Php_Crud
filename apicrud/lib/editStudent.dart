@@ -15,21 +15,19 @@ TextEditingController stdName = TextEditingController();
 TextEditingController stdAge = TextEditingController();
 TextEditingController stdClass = TextEditingController();
 TextEditingController stdSection = TextEditingController();
-// TextEditingController stdid = TextEditingController();
+TextEditingController stdid = TextEditingController();
 
 class _editStudentState extends State<editStudent> {
   @override
   void initState() {
     super.initState();
-    // stdid.text = widget.id;
+    stdid.text = widget.id;
     getData();
   }
 
   Future<void> getData() async {
     String url = "http://localhost:82/flutter_Php_Crud/getData.php";
- var response =    await http.post(Uri.parse(url), body: {
-      "id":widget.id
-    });
+    var response = await http.post(Uri.parse(url), body: {"id": widget.id});
     var studentData = jsonDecode(response.body);
     stdName.text = studentData[0]['std_name'];
     stdAge.text = studentData[0]['std_age'];
@@ -37,8 +35,16 @@ class _editStudentState extends State<editStudent> {
     stdSection.text = studentData[0]['std_section'];
   }
 
-  Future<void> updateData() async{
-
+  Future<void> updateData() async {
+    String url = "http://localhost:82/flutter_Php_Crud/update.php";
+    var response = await http.post(Uri.parse(url), body: {
+      "name": stdName.text,
+      "age": stdAge.text,
+      "class": stdClass.text,
+      "section": stdSection.text,
+      "id": widget.id
+    });
+    jsonDecode(response.body);
   }
 
   Widget build(BuildContext context) {
