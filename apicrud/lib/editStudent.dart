@@ -1,23 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class editStudent extends StatefulWidget {
   String id;
-  editStudent({super.key,  required this.id});
+  editStudent({super.key, required this.id});
 
   @override
   State<editStudent> createState() => _editStudentState();
 }
+
 TextEditingController stdName = TextEditingController();
 TextEditingController stdAge = TextEditingController();
 TextEditingController stdClass = TextEditingController();
 TextEditingController stdSection = TextEditingController();
-TextEditingController stdid = TextEditingController();
+// TextEditingController stdid = TextEditingController();
+
 class _editStudentState extends State<editStudent> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    stdid.text = widget.id;
+    // stdid.text = widget.id;
+    getData();
   }
+
+  Future<void> getData() async {
+    String url = "http://localhost:82/flutter_Php_Crud/getData.php";
+ var response =    await http.post(Uri.parse(url), body: {
+      "id":widget.id
+    });
+    var studentData = jsonDecode(response.body);
+    stdName.text = studentData[0]['std_name'];
+    stdAge.text = studentData[0]['std_age'];
+    stdClass.text = studentData[0]['std_class'];
+    stdSection.text = studentData[0]['std_section'];
+  }
+
+  Future<void> updateData() async{
+
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,20 +59,20 @@ class _editStudentState extends State<editStudent> {
           SizedBox(
             height: 15,
           ),
-           Container(
-            // color: Colors.red,
-            padding: EdgeInsets.all(15),
-            // width: double.infinity,
-            child: TextFormField(
-              controller: stdid,
-              decoration: InputDecoration(
-                  label: Text('Enter Student ID'),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 2),
-                  )),
-            ),
-          ),
-           SizedBox(
+          // Container(
+          //   // color: Colors.red,
+          //   padding: EdgeInsets.all(15),
+          //   // width: double.infinity,
+          //   child: TextFormField(
+          //     controller: stdid,
+          //     decoration: InputDecoration(
+          //         label: Text('Enter Student ID'),
+          //         border: OutlineInputBorder(
+          //           borderSide: BorderSide(width: 2),
+          //         )),
+          //   ),
+          // ),
+          SizedBox(
             height: 15,
           ),
           Container(
@@ -119,7 +142,7 @@ class _editStudentState extends State<editStudent> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-               
+                updateData();
                 stdName.clear();
                 stdAge.clear();
                 stdClass.clear();
@@ -128,8 +151,6 @@ class _editStudentState extends State<editStudent> {
               child: Text('Update'),
             ),
           ),
-        
-         
         ],
       ),
     );
